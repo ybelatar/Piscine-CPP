@@ -1,5 +1,13 @@
 #include "ScalarConverter.hpp"
 
+static inline void printImpossible()
+{
+    std::cout << "char : impossible" << std::endl;
+    std::cout << "int : impossible" << std::endl;
+    std::cout << "float : impossible" << std::endl;
+    std::cout << "double : impossible" << std::endl;
+}
+
 static inline bool isPseudoLiteral(std::string &str)
 {
     if (str == "nan" || str == "nanf")
@@ -28,6 +36,24 @@ static inline bool isPseudoLiteral(std::string &str)
     return (1);
 }
 
+//static inline bool isNotNumber(std::string &str)
+//{
+//    int i = 0;
+//    
+//    if (!str || !*str)
+//        return (printImpossible(), true);
+//    if (str[i] == '-' || str[i] == '+')
+//        i++;
+//    while (str[i] >= '0' && str[i] <= '9')
+//        i++;
+//    if (str[i] && str[i] != '.')
+//        return (printImpossible(), true);
+//    if (!str[i])
+//        return (false);
+    
+
+//}
+
 
 static inline void displayChar(std::string &str)
 {
@@ -36,10 +62,11 @@ static inline void displayChar(std::string &str)
     else
     {
         char *endptr;
-        long n = std::strtol(str.c_str(), &endptr, 10);
+        long n = std::strtol(str.c_str(), NULL, 10);
         std::cout << "char : ";
-        //if (*endptr || !str.size())
-        //    throw std::invalid_argument("impossible");
+        std::strtof(str.c_str(), &endptr);
+        if ((*endptr && *endptr != 'f') || !str.size())
+            throw std::invalid_argument("impossible");
         if (errno == ERANGE)
             throw std::invalid_argument("impossible");
         if (n < 0 || n > 127)
@@ -53,10 +80,11 @@ static inline void displayChar(std::string &str)
 static inline void displayInt(std::string &str)
 {
     char *endptr;
-    long n = std::strtol(str.c_str(), &endptr, 10);
+    long n = std::strtol(str.c_str(), NULL, 10);
     std::cout << "int : ";
-    //if (*endptr || !str.size())
-    //    throw std::invalid_argument("impossible");
+    std::strtof(str.c_str(), &endptr);
+    if ((*endptr && *endptr != 'f') || !str.size())
+            throw std::invalid_argument("impossible");
     if (n < INT_MIN || n > INT_MAX)
         throw std::invalid_argument("overflow");
     std::cout << "" << static_cast<int>(n) << std::endl;
@@ -67,8 +95,8 @@ static inline void displayFloat(std::string &str)
     char *endptr;
     float n = std::strtof(str.c_str(), &endptr);
     std::cout << "float : ";
-    //if (*endptr || !str.size())
-    //    throw std::invalid_argument("impossible");
+    if ((*endptr && *endptr != 'f') || !str.size())
+        throw std::invalid_argument("impossible");
     if (errno == ERANGE)
             throw std::out_of_range("overflow");
     std::cout << "" << static_cast<float>(n);
@@ -82,8 +110,9 @@ static inline void displayDouble(std::string &str)
     char *endptr;
     double n = std::strtod(str.c_str(), &endptr);
     std::cout << "double : ";
-    //if (*endptr || !str.size())
-    //    throw std::invalid_argument("impossible");
+    std::strtof(str.c_str(), &endptr);
+    if ((*endptr && *endptr != 'f') || !str.size())
+        throw std::invalid_argument("impossible");
     if (errno == ERANGE)
             throw std::out_of_range("overflow");
     std::cout << "" << static_cast<double>(n);
