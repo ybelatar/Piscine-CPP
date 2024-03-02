@@ -1,6 +1,6 @@
 CC		= g++
 CFLAGS	= -Wall -Werror -Wextra -g3 -MMD
-NAME	= template
+NAME	= mutant
 
 SRC_PATH = ./
 OBJ_PATH = objs/
